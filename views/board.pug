@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h1= title
+  p Rows: #{query.rows}, Columns: #{query.cols}
+  - const rows = Number(query.rows)
+  - const cols = Number(query.cols)
+
+  - if (!Number.isInteger(rows) || !Number.isInteger(cols))
+    p The input must be integers.
+
+  - else if (rows < 1 || rows > 10)
+    p The number of rows must be between 1 and 10 (inclusive).
+
+  - else if (cols < 1 || cols > 10)
+    p The number of columns must be between 1 and 10 (inclusive).
+
+  - else
+    table#outer
+      - for (let i = 1; i <= rows; i++)
+        tr#middle
+          - for (let j = 1; j <= cols; j++) 
+            - if (i === j)
+                td= 1
+            - else if (i > j)
+                td= 0
+            - else
+                td= j-i+1
