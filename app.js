@@ -9,7 +9,31 @@ var usersRouter = require('./routes/users');
 var booksRouter = require('./routes/books');
 var boardRouter = require('./routes/board');
 var selectorRouter = require('./routes/selector');
+var resourceRouter = require('./routes/resource');
+var bookRouter = require('./models/books');
+const books = require('./models/books');
 var app = express();
+
+
+
+require('dotenv').config();
+const connectionString =
+process.env.MONGO_CON
+mongoose = require('mongoose');
+mongoose.connect(connectionString,
+{useNewUrlParser: true,
+useUnifiedTopology: true});
+
+
+//Get the default connection
+var db = mongoose.connection;
+
+//Bind connection to error event
+db.on('error', console.error.bind(console, 'MongoDB connectionerror:'));
+db.once("open", function(){
+console.log("Connection to DB succeeded")});
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +50,8 @@ app.use('/users', usersRouter);
 app.use('/books', booksRouter);
 app.use('/board', boardRouter);
 app.use('/selector', selectorRouter);
+app.use('/books', bookRouter);
+app.use('/resource', resourceRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,5 +68,31 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+// We can seed the collection if needed on server start
+async function recreateDB() {
+  await books.deleteMany();
+  let instance1 = new books({author: "James Patterson", price: 200, publishedyear: 2001 });
+
+  instance1.save().then(() => {
+    console.log('Everything went well');
+  }).catch((e) => {
+    console.log('There was an error', e.message);
+  });
+  let instance2 = new books({author: "C J Box", price: 350, publishedyear: 2005});
+  instance2.save().then(() => {
+    console.log('Everything went well');
+  }).catch((e) => {
+    console.log('There was an error', e.message);
+  });
+  let instance3 = new books({author: "Michael Connelly", price: 450, publishedyear: 1998});
+  instance3.save().then(() => {
+    console.log('Everything went well');
+  }).catch((e) => {
+    console.log('There was an error', e.message);
+  });
+}
+
+let reseed = true;
+if (reseed) { recreateDB();}
 
 module.exports = app;
