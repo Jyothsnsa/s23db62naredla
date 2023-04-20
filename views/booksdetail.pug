@@ -1,0 +1,23 @@
+extends layout
+block content
+ h1= title
+ if (toShow == null)
+  h2 No instance to detail
+ else
+  - let booksid = toShow._id
+  - let author = toShow.author
+  - let price = toShow.price
+  - let publishedyear = toShow.publishedyear
+  div
+    div.row
+     div(class='booksAttr mr-3') books ID is:
+     div #{booksid}
+    div.row
+     div(class='booksAttr mr-3') books Type is:
+     div #{author}
+    div.row
+     div(class='booksAttr mr-3') books Size is:
+     div #{price}
+    div.row
+     div(class='booksAttr mr-3') books price is:
+     div #{publishedyear}
