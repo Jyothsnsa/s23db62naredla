@@ -2,18 +2,19 @@ extends layout
 
 block content
   h1= title
-  
-  -const results = [{ author: "James Patterson", price: 200, publishedyear: 2001 },{ author: "C J Box", price: 350, publishedyear: 2005},{author: "Michael Connelly", price: 450, publishedyear: 1998 }]
-
+  - let items = results;
   div(class="container-fluid")
-  div(class="row")
-    each item,index in results
-      div(class="col-sm-2" onclick=`buy(${index})`)
-        p author: #{item.author}
-        p price: $#{item.price}
-        p publishedyear: #{item.publishedyear}
+    div(class="row")
+      each item,index in items
+        - let destination = `dispatch(\"/books/update?id=${item._id}\")`
+        div(class="col-sm-2" class="m-1")
+          h3 #{item.author}
+          p #{item.price}
+          p #{item.publishedyear}
+          
+          button.btn( class="btn-primary ml-1", onclick= destination) Update
   script.
-    function buy(index)
-    {
-      alert(`You purchased Item ${index+1}`)
+    function dispatch(path){
+      console.log(path);
+      window.location.href=path;
     }
